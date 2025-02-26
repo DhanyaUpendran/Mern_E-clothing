@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, "../FRONTEND/dist")));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../FRONTEND/dist", "index.html"));
 });
- 
+  
 const port = process.env.PORT
 // Consider making DB connection before starting server
 const startServer = async () => {
