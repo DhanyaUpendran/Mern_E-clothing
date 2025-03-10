@@ -19,14 +19,13 @@ app.use(
     origin: "http://localhost:5173", // 
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   
   })
 );
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-
 
 
 // Move API routes above static serving
@@ -39,8 +38,8 @@ app.use(express.static(path.join(__dirname, "../FRONTEND/dist")));
 // Handle React frontend routing
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../FRONTEND/dist", "index.html"));
-});
-  
+}); 
+
 const port = process.env.PORT
 // Consider making DB connection before starting server
 const startServer = async () => {

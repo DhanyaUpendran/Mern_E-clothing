@@ -1,36 +1,17 @@
 import mongoose from "mongoose";
 
-    const productSchema = new mongoose.Schema({
-        images: {
-          type: [String], // Array of image URLs
-          validate: {
-            validator: function(arr) {
-              return arr.length <= 4; // Max 4 images allowed
-            },
-            message: 'Maximum 4 images allowed'
-          },
-          default: [] 
-        },
-        name: {
-          type: String,
-          required: true,
-          trim: true
-        },
-        sizes: {
-          S: { type: Boolean, default: false }, // Toggleable sizes
-          M: { type: Boolean, default: false },
-          XL: { type: Boolean, default: false },
-          XXL: { type: Boolean, default: false }
-        },
-        price: {
-          type: Number,
-          required: true,
-          min: 0
-        },
-        details: {
-          type: String,
-          required: true
-        },
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  price: { type: Number, required: true, min: 0 },
+  category: { type: String, required: true },
+  images: { type: [String], required: true },
+  sizes: {
+    S: Boolean,
+    M: Boolean,
+    XL: Boolean,
+    XXL: Boolean,
+  },
+  details: { type: String, required: true },
         category: {
           type: String,
           required: true,

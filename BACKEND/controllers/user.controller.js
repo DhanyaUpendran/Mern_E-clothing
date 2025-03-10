@@ -293,7 +293,7 @@ export const checkout = async (req, res) => {
   };
   
   // 8️⃣ Logout
-export const logout = (req, res) => {
+export const userlogout = (req, res) => {
     res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
     res.json({ success: true, message: "Logged out successfully" });
   };
