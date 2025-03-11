@@ -29,7 +29,7 @@ export const registerAdmin = async (req, res) => {
 
     await admin.save();
 
-    // ❌ Remove token generation
+   
     res.status(201).json({ message: "Admin registered successfully" });
 
   } catch (error) {
@@ -115,7 +115,13 @@ export const dashboard = async (req, res) => {
 // adding products
 export const addProduct = async (req, res) => {
   try {
-    const { name, sizes, price, details, category } = req.body;
+    const { name, price, details, category } = req.body;
+    let { sizes } = req.body;
+
+     // Parse sizes if it's a string
+     if (typeof sizes === "string") {
+      sizes = JSON.parse(sizes);
+    }
 
     // Extract Cloudinary image URLs from Multer
     const imageUrls = req.files ? req.files.map(file => file.path) : [];
@@ -161,20 +167,20 @@ export const getProduct = async (req,res)=>{
     //delete product
 
 
-    export const deleteProduct = async (req,res)=>{
-        try {
-            const product = await Product.findByIdAndDelete(req.params.id);
-            
-            if (!product) {
-              return res.status(404).json({ error: 'Product not found' });
-            }
-      
-            res.json({ message: 'Product deleted successfully' });
-          } catch (error) {
-            res.status(500).json({ error: error.message });
-          }
+    export const deleteProduct = async (req, res) => {
+      try {
+        const product = await Product.findByIdAndDelete(req.params.id);
         
-    }
+        if (!product) {
+          return res.status(404).json({ error: "Product not found" });
+        }
+    
+        res.json({ success: true, deletedProduct: product });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    };
+    
     //logout
 
   
@@ -188,3 +194,31 @@ export const getProduct = async (req,res)=>{
             res.status(500).json({ error: 'Server error' });
           }
         }
+//update order status
+        export const updateOrderStatus = async (req, res) => {
+          try {
+            const { orderId } = req.params; // Get order ID from URL
+            const { status } = req.body; // Get new status from request body
+        
+            // Validate status
+            const validStatuses = ["pending", "shipped", "delivered", "cancelled"];
+            if (!validStatuses.includes(status)) {
+              return res.status(400).json({ success: false, message: "Invalid status value" });
+            }
+        
+            // Find order and update status
+            const order = await Order.findByIdAndUpdate(
+              orderId,
+              { status },
+              { new: true } // Return updated order
+            );
+        
+            if (!order) {
+              return res.status(404).json({ success: false, message: "Order not found" });
+            }
+        
+            res.status(200).json({ success: true, message: "Order status updated", order });
+          } catch (error) {
+            res.status(500).json({ success: false, error: error.message });
+          }
+        };

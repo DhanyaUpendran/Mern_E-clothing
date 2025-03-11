@@ -4,7 +4,7 @@ import AdminDashboard from "./pages/Admindashboard.jsx";
 import AdminAddProduct from "./pages/AdminAddProduct.jsx";
 import AdminOrderList from "./pages/AdminOrderList.jsx";
 import AdminProductList from "./pages/AdminProductList.jsx";
-
+import UserHome from "./pages/UserHome.jsx";
 
 
 
@@ -18,6 +18,8 @@ function App() {
         <Route path="/addproduct" element= {<AdminAddProduct />} />
         <Route path="/getproduct" element= {<AdminProductList />} />
         <Route path="/orderdetails-admin" element= {< AdminOrderList/>} />
+
+        <Route path ="/" element={<UserHome />} />
       
       </Routes>
     </Router>
