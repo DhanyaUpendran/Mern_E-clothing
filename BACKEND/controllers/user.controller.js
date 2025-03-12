@@ -109,56 +109,26 @@ export const userSignup = async (req,res)=>{
        // product View 
 
 
-export const productView = async (req,res)=>{
-    try{
-
-        {
-            // 1. Build Query
-            const queryObj = { 
-              published: true,         // Only show published products
-              stock: { $gt: 0 }        // Only products with stock > 0
-            };
-            
-            // 2. Filtering
-            if (req.query.category) {
-              queryObj.category = req.query.category;
-            }
-            
-            // 3. Sorting
-            const sortBy = req.query.sort || '-createdAt';
-            
-            // 4. Pagination
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 12;
-            const skip = (page - 1) * limit;
-        
-            // 5. Database Query
-            const products = await Product.find(queryObj)
-              .select('-__v -costPrice -supplier -internalNotes') // Exclude sensitive fields
-              .sort(sortBy)
-              .skip(skip)
-              .limit(limit);
-        
-            // 6. Total Products Count (for pagination)
-            const totalProducts = await Product.countDocuments(queryObj);
-        
-            res.json({
-              success: true,
-              count: products.length,
-              totalProducts,
-              totalPages: Math.ceil(totalProducts / limit),
-              currentPage: page,
-              products
-            });}
-        
-          } catch (error) {
-            console.error('Product fetch error:', error);
-            res.status(500).json({
-              success: false,
-              message: 'Error fetching products'
-            });
-          }
-        };
+       export const productView = async (req, res) => {
+        try {
+          const page = parseInt(req.query.page) || 1;  // Default to page 1
+          const limit = parseInt(req.query.limit) || 3; // Default to 6 items per page
+          const skip = (page - 1) * limit;
+      
+          // Fetch products with pagination
+          const products = await Product.find().select('-__v').skip(skip).limit(limit);
+          const totalProducts = await Product.countDocuments(); // Total product count
+      
+          res.json({
+            products,
+            currentPage: page,
+            totalPages: Math.ceil(totalProducts / limit),
+          });
+        } catch (error) {
+          res.status(500).json({ error: 'Server error' });
+        }
+      };
+      
     
     //get product details
 

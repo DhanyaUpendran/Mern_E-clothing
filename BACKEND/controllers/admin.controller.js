@@ -117,6 +117,7 @@ export const addProduct = async (req, res) => {
   try {
     const { name, price, details, category } = req.body;
     let { sizes } = req.body;
+   
 
      // Parse sizes if it's a string
      if (typeof sizes === "string") {
@@ -186,19 +187,28 @@ export const getProduct = async (req,res)=>{
   
     
     
-     export const orderDetail = async (req,res)=>{
-        try{
-            const orders = await Order.find().select('-__v'); // Exclude version key
-            res.json(orders);
-          } catch (error) {
-            res.status(500).json({ error: 'Server error' });
-          }
-        }
+     export const orderDetail =async (req, res) => {
+      try {
+        const orders = await Order.find()
+          .populate("user", "firstName lastName email") // Fetch user details
+          .populate("products.productId", "name sizes price") // Fetch product details
+          .select("-__v"); // Exclude version key
+    
+        res.status(200).json({ success: true, orders });
+      } catch (error) {
+        res.status(500).json({ error: "Server error" });
+      }
+    };
 //update order status
-        export const updateOrderStatus = async (req, res) => {
+        export const updateOrderStatus =async (req, res) => {
           try {
             const { orderId } = req.params; // Get order ID from URL
             const { status } = req.body; // Get new status from request body
+        
+            // Validate orderId format
+            if (!mongoose.Types.ObjectId.isValid(orderId)) {
+              return res.status(400).json({ success: false, message: "Invalid order ID format" });
+            }
         
             // Validate status
             const validStatuses = ["pending", "shipped", "delivered", "cancelled"];
@@ -206,12 +216,14 @@ export const getProduct = async (req,res)=>{
               return res.status(400).json({ success: false, message: "Invalid status value" });
             }
         
+            // Additional update if order is "shipped" or "delivered"
+            const updateFields = { status };
+            if (status === "shipped" || status === "delivered") {
+              updateFields.date = new Date(); // Update date when shipped or delivered
+            }
+        
             // Find order and update status
-            const order = await Order.findByIdAndUpdate(
-              orderId,
-              { status },
-              { new: true } // Return updated order
-            );
+            const order = await Order.findByIdAndUpdate(orderId, updateFields, { new: true });
         
             if (!order) {
               return res.status(404).json({ success: false, message: "Order not found" });
