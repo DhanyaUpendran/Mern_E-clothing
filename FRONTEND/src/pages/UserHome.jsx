@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Footer from '../components/Footer'
 import Navbar from "../components/Navbar"
+import Banner from "../components/Banner"
 const UserHome=()=> {
    const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -13,8 +14,7 @@ const [totalPages, setTotalPages] = useState(1);
 useEffect(() => {
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/user/${products}?page=${currentPage}&limit=3`);
-      
+      const response = await axios.get(`http://localhost:3000/user/?page=${currentPage}&limit=3`);
       setProducts(response.data.products);
       setTotalPages(response.data.totalPages); // Update total pages
     } catch (error) {
@@ -27,38 +27,44 @@ useEffect(() => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto p-5">
-    <h2 className="text-2xl font-bold mb-5">Products</h2>
+      <Banner />
+      <div className="container mx-auto bg-[#46291E]  p-5">
+    <h2 className="text-2xl font-bold mb-5 text-white">LATEST ON SALE</h2>
 
     {/* Product Grid */}
-    <div className="grid grid-cols-3 gap-5">
-      {products.map((product) => (
-        <div key={product._id} className="border p-3 rounded shadow-lg">
-          {/* Check if product.images exist and has at least one image */}
-          {product.images && product.images.length > 0 ? (
-            <img
-              src={product.images[0]} // Use the first image
-              alt={product.name}
-              className="w-full h-40 object-cover"
-              onError={(e) => {
-                e.target.onerror = null; // Prevent infinite loop
-                e.target.src = "/placeholder.jpg"; // Fallback image
-              }}
-            />
-          ) : (
-            <div className="w-full h-40 flex items-center justify-center bg-gray-200 text-gray-600">
-              No Image Available
-            </div>
-          )}
+    <div className="grid grid-cols-3 gap-1">
+  {products.map((product) => (
+    <div key={product._id} 
+    className="card bg-base-100 shadow-sm w-64 transition-transform duration-300 hover:scale-105 cursor-pointer">
+      <figure className="w-full h-40">
+        {product.images && product.images.length > 0 ? (
+          <img
+            src={product.images[0]} // Use the first image
+            alt={product.name}
+            className="w-full h-full object-cover" // Ensures image fits perfectly
+            onError={(e) => {
+              e.target.onerror = null; // Prevent infinite loop
+              e.target.src = "/placeholder.jpg"; // Fallback image
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-600 rounded-t-xl">
+            No Image Available
+          </div>
+        )}
+      </figure>
 
-          <h3 className="mt-2 font-semibold">{product.name}</h3>
-          <p className="text-gray-600">${product.price}</p>
-          <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded">
-            View Details
-          </button>
+      <div className="card-body items-center text-center p-4">
+        <h2 className="card-title text-sm">{product.name}</h2> {/* Smaller text */}
+        <p className="text-gray-600 text-sm">${product.price}</p>
+        <div className="card-actions">
+          <button className="btn btn-primary btn-sm">View Details</button> {/* Smaller button */}
         </div>
-      ))}
+      </div>
     </div>
+  ))}
+</div>
+
     {/* Pagination Controls */}
   <div className="flex justify-center mt-5">
     <button

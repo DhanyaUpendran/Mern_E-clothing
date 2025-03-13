@@ -111,21 +111,23 @@ export const userSignup = async (req,res)=>{
 
        export const productView = async (req, res) => {
         try {
-          const page = parseInt(req.query.page) || 1;  // Default to page 1
-          const limit = parseInt(req.query.limit) || 3; // Default to 6 items per page
-          const skip = (page - 1) * limit;
-      
-          // Fetch products with pagination
-          const products = await Product.find().select('-__v').skip(skip).limit(limit);
-          const totalProducts = await Product.countDocuments(); // Total product count
-      
-          res.json({
-            products,
-            currentPage: page,
-            totalPages: Math.ceil(totalProducts / limit),
-          });
+            const page = parseInt(req.query.page) || 1;  
+            const limit = parseInt(req.query.limit) || 3; 
+            const skip = (page - 1) * limit;
+    
+            // console.log("Fetching products... Page:", page, "Limit:", limit); // Debugging
+    
+            const products = await Product.find().select('-__v').skip(skip).limit(limit);
+            const totalProducts = await Product.countDocuments();
+    
+            res.json({
+                products,
+                currentPage: page,
+                totalPages: Math.ceil(totalProducts / limit),
+            });
         } catch (error) {
-          res.status(500).json({ error: 'Server error' });
+            console.error("Error in productView:", error); // Debugging
+            res.status(500).json({ error: 'Server error', details: error.message });
         }
       };
       
