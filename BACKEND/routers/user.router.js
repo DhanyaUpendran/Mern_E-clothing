@@ -6,7 +6,7 @@ const router = express.Router();
 router.post("/usersignup",userSignup)
 router.post("/userlogin", userLogin)
 router.get ("/",productView)
-router.get("/:id",getProductDetails);
+router.get("/:id",authMiddleware,getProductDetails);
 router.get("/myorders",  authMiddleware, getMyOrders);
 router.post("/cart",  authMiddleware, addToCart);
 router.post("/cart/add/:productId",  authMiddleware, addProductToCart);
