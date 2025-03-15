@@ -9,8 +9,8 @@ import UserSignup from "./pages/UserSignup.jsx";
 import UserLogin from "./pages/UserLogin.jsx";
 import UserOrder from "./pages/UserOrder.jsx";
 import UserCart from "./pages/UserCart.jsx";
-import UserProduct from "./pages/UserProduct.jsx";
 import UserViewProduct from "./pages/UserViewProduct.jsx";
+import UserBillingAddress from "./pages/UserBillingAddress.jsx";
 function App() {
   return (
     <Router>
@@ -27,8 +27,9 @@ function App() {
         <Route path ="/userlogin" element={<UserLogin />} />
         <Route path ="/userorder" element={<UserOrder />} />
         <Route path ="/usercart" element={<UserCart />} />
-        <Route path ="/userproduct" element={<UserProduct />} />
+       
         <Route path="/productdetails/:productId" element={<UserViewProduct/>} />
+        <Route path ="/userbilling-address" element={<UserBillingAddress />} />
       </Routes>
     </Router>
   );

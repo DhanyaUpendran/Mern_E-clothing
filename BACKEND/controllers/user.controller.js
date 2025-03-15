@@ -155,32 +155,100 @@ export const getMyOrders = async (req, res) => {
     }
   };
   // 3️⃣ Add Item to Cart
-export const addToCart = async (req, res) => {
+  export const addToCart = async (req, res) => {
     try {
       const { productId, quantity } = req.body;
-      const userId = req.user.id;
-  
-      let cart = await Cart.findOne({ user: userId });
+      const userId = req.user?.id; // Ensure user ID is coming from request
+
+      if (!userId) {
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+      }
+
+      let cart = await Cart.findOne({ user: userId }).populate("products.productId"); // Ensure it populates products
       if (!cart) cart = new Cart({ user: userId, products: [] });
-  
+
       const productExists = cart.products.find((p) => p.productId.toString() === productId);
       if (productExists) {
         productExists.quantity += quantity;
       } else {
         cart.products.push({ productId, quantity });
       }
-  
+
       await cart.save();
-      res.json({ success: true, message: "Added to cart" });
+      res.json({ success: true, cart }); // Return updated cart
     } catch (error) {
       res.status(500).json({ message: "Error adding to cart", error });
     }
-  };
+};
+//getcart
+
+export const getCart = async (req, res) => {
+  try {
+      if (!req.user || !req.user.id) {
+          return res.status(401).json({ success: false, message: "Unauthorized: No user found" });
+      }
+
+      const userId = req.user.id;
+      const cart = await Cart.findOne({ user: userId }).populate("products.productId");
+
+      if (!cart) {
+          return res.json({ success: true, cart: { products: [] } }); // Empty cart
+      }
+
+      res.json({ success: true, cart });
+  } catch (error) {
+      console.error("Error fetching cart:", error);
+      res.status(500).json({ success: false, message: "Error fetching cart", error });
+  }
+};
+
+
+
   // 4️⃣ Add Specific Product to Cart
 export const addProductToCart = async (req, res) => {
     req.body.productId = req.params.productId;
     return addToCart(req, res);
   };
+  //update cart quantity
+
+  export const updatequantity = async (req,res) =>{
+    try {
+      const { itemId, quantity } = req.body;
+      const userId = req.user.id;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized: Please log in." });
+      }
+  
+      if (quantity < 1) {
+        return res.status(400).json({ error: "Quantity must be at least 1." });
+      }
+  
+      // Find the user's cart
+      let cart = await Cart.findOne({ user: userId });
+  
+      if (!cart) {
+        return res.status(404).json({ error: "Cart not found." });
+      }
+  
+      // Find the product in the cart
+      let productIndex = cart.products.findIndex(
+        (item) => item.productId.toString() === itemId
+      );
+  
+      if (productIndex === -1) {
+        return res.status(404).json({ error: "Product not found in cart." });
+      }
+  
+      // Update quantity
+      cart.products[productIndex].quantity = quantity;
+      await cart.save();
+  
+      return res.json({ message: "Quantity updated successfully", cart });
+    } catch (error) {
+      console.error("Error updating cart quantity:", error);
+      return res.status(500).json({ error: "Internal server error." });
+    }}
+  
   // 5️⃣ Remove Product from Cart
 export const removeProductFromCart = async (req, res) => {
     try {

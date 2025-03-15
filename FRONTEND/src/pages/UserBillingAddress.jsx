@@ -1,6 +1,6 @@
 import React from 'react'
 
-function UserProduct() {
+function UserBillingAddress() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function UserProduct() {
   )
 }
 
-export default UserProduct
+export default UserBillingAddress
