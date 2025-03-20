@@ -5,7 +5,10 @@ import User from '../models/user.signup.js';
 export const authMiddleware = async (req, res, next) => {
   try {
     // Get token from headers or cookies
+  
+
     const token = req.headers.authorization?.split(' ')[1] || req.cookies?.token;
+    // console.log("Checking auth with token:", token);
 
     if (!token) {
       return res.status(401).json({ 

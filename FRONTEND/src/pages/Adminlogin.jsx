@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+
 // import Cookies from "js-cookie";
 
 const AdminLogin = () => {
@@ -14,7 +16,7 @@ const AdminLogin = () => {
     setError("");
     
     try {
-      const response = await axios.post("http://localhost:3000/admin/adminlogin/",
+      const response = await axios.post("http://localhost:3000/admin/adminlogin",
         { username, password },
         { withCredentials: true } 
       );
@@ -23,6 +25,7 @@ const AdminLogin = () => {
       }
   
       if (response.data.isAdmin) {
+        localStorage.setItem("adminToken", response.data.token);
         console.log("Admin Authenticated, Navigating...");
         navigate("/admindashboard"); // Redirect on success
       } else {

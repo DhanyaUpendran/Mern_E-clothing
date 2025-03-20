@@ -32,7 +32,7 @@ const UserSignup = () => {
         title: "Signup Successful",
         text: response.data.message,
       }).then(() => {
-        navigate("/login"); // Redirect to login page after success
+        navigate("/userlogin"); // Redirect to login page after success
       });
 
       setFormData({ phone: "", username: "", password: "" }); // Clear form

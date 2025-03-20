@@ -1,6 +1,7 @@
 import Admin from "../models/admin.login.js";
 import Product from "../models/admin.addproduct.model.js"
 import Order from "../models/user.order.js";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -190,47 +191,55 @@ export const getProduct = async (req,res)=>{
      export const orderDetail =async (req, res) => {
       try {
         const orders = await Order.find()
-          .populate("user", "firstName lastName email") // Fetch user details
-          .populate("products.productId", "name sizes price") // Fetch product details
+          
+          .populate({
+            path: "products.productId",
+            select: "name sizes price images",
+            // Add this option to handle missing references
+            options: { strictPopulate: false }// Fetch product details
+          })
+          .populate("user", "username _id") // Fetch user details
           .select("-__v"); // Exclude version key
-    
+         
         res.status(200).json({ success: true, orders });
+        
       } catch (error) {
         res.status(500).json({ error: "Server error" });
       }
     };
 //update order status
-        export const updateOrderStatus =async (req, res) => {
-          try {
-            const { orderId } = req.params; // Get order ID from URL
-            const { status } = req.body; // Get new status from request body
-        
-            // Validate orderId format
-            if (!mongoose.Types.ObjectId.isValid(orderId)) {
-              return res.status(400).json({ success: false, message: "Invalid order ID format" });
-            }
-        
-            // Validate status
-            const validStatuses = ["pending", "shipped", "delivered", "cancelled"];
-            if (!validStatuses.includes(status)) {
-              return res.status(400).json({ success: false, message: "Invalid status value" });
-            }
-        
-            // Additional update if order is "shipped" or "delivered"
-            const updateFields = { status };
-            if (status === "shipped" || status === "delivered") {
-              updateFields.date = new Date(); // Update date when shipped or delivered
-            }
-        
-            // Find order and update status
-            const order = await Order.findByIdAndUpdate(orderId, updateFields, { new: true });
-        
-            if (!order) {
-              return res.status(404).json({ success: false, message: "Order not found" });
-            }
-        
-            res.status(200).json({ success: true, message: "Order status updated", order });
-          } catch (error) {
-            res.status(500).json({ success: false, error: error.message });
-          }
-        };
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params; // Get order ID from URL
+    const { orderStatus } = req.body; // Get new status from request body
+
+    // Validate orderId format
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return res.status(400).json({ success: false, message: "Invalid order ID format" });
+    }
+
+    // Validate status
+    const validStatuses = ["pending", "shipped", "delivered", "cancelled"];
+    if (!validStatuses.includes(orderStatus)) {
+      return res.status(400).json({ success: false, message: "Invalid status value" });
+    }
+
+    // Additional update if order is "shipped" or "delivered"
+    const updateFields = { orderStatus }; // ✅ Correct update object
+    if (orderStatus === "shipped" || orderStatus === "delivered") {
+      updateFields.date = new Date(); // ✅ Update date when shipped or delivered
+    }
+
+    // Find order and update status
+    const order = await Order.findByIdAndUpdate(orderId, updateFields, { new: true });
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    // console.log("Updated order:", order); // Debugging log
+    res.status(200).json({ success: true, message: "Order status updated", order });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};

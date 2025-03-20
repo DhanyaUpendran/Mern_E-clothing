@@ -35,6 +35,8 @@ const UserLogin = () => {
         // Store user info (optional)
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
+        // Add this line to store the token
+        localStorage.setItem("token", response.data.token);
         // Redirect to dashboard or home page
         navigate("/");
       });

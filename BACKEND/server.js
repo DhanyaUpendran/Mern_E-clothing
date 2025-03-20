@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import adminRoute from "./routers/admin.router.js";
 import userRoute from "./routers/user.router.js";
+// import Cart from "./models/user.cart.js"
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";  
@@ -39,6 +40,10 @@ app.use(express.static(path.join(__dirname, "../FRONTEND/dist")));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../FRONTEND/dist", "index.html"));
 });  
+//getting razorpay key for frontend
+app.get("/get-razorpay-key", (req, res) => {
+  res.json({ key: process.env.RAZORPAY_KEY_ID });
+});
 
 const port = process.env.PORT
 // Consider making DB connection before starting server
@@ -54,6 +59,20 @@ const startServer = async () => {
   }
 };
 startServer();
+// const cleanCartOnStart = async () => {
+//   try {
+//     const result = await Cart.updateMany(
+//       {},
+//       { $pull: { products: { productId: null } } }
+//     );
+//     console.log("Removed null products from carts:", result);
+//   } catch (error) {
+//     console.error("Error cleaning carts:", error);
+//   }
+// };
+
+// // Run cleanup when the server starts
+// cleanCartOnStart();
 // Add error handling middleware at the end
 app.use((err, req, res, next) => {
   console.error(err.stack);

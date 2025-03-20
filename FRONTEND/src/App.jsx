@@ -7,10 +7,12 @@ import AdminProductList from "./pages/AdminProductList.jsx";
 import UserHome from "./pages/UserHome.jsx";
 import UserSignup from "./pages/UserSignup.jsx";
 import UserLogin from "./pages/UserLogin.jsx";
-import UserOrder from "./pages/UserOrder.jsx";
+import MyOrders from "./pages/UserMyOrders.jsx";
 import UserCart from "./pages/UserCart.jsx";
 import UserViewProduct from "./pages/UserViewProduct.jsx";
-import UserBillingAddress from "./pages/UserBillingAddress.jsx";
+import CheckoutBilling from "./pages/UserCheckout.jsx";
+import OrderSuccess from "./pages/OrderSuccess.jsx";
+import AllProductsPage from "./pages/UserAllproduct.jsx";
 function App() {
   return (
     <Router>
@@ -25,11 +27,14 @@ function App() {
         <Route path ="/" element={<UserHome />} />
         <Route path ="/usersignup" element={<UserSignup />} />
         <Route path ="/userlogin" element={<UserLogin />} />
-        <Route path ="/userorder" element={<UserOrder />} />
+        
         <Route path ="/usercart" element={<UserCart />} />
-       
         <Route path="/productdetails/:productId" element={<UserViewProduct/>} />
-        <Route path ="/userbilling-address" element={<UserBillingAddress />} />
+        <Route path="/billing" element={<CheckoutBilling />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/orders" element={<MyOrders />} />
+        <Route path="/allproduct" element={<AllProductsPage/>} />
+      
       </Routes>
     </Router>
   );

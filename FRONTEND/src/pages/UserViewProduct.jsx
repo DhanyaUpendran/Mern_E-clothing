@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Topbar from '../components/Topbar';
 
 const UserViewProduct = () => {
   const { productId } = useParams();
@@ -96,6 +97,8 @@ const UserViewProduct = () => {
   if (!product) return null;
 
   return (
+    <div>
+      <Topbar/>
     <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-xl shadow-sm">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Images Section - REDUCED SIZE */}
@@ -226,6 +229,7 @@ const UserViewProduct = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
