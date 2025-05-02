@@ -69,13 +69,11 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import connectToMongoDB from "./db/connectToMongoDB.js";
-import adminRoute from "./routers/admin.router.js";
-import userRoute from "./routers/user.router.js";
 import cors from "cors";
 
-dotenv.config();
+// Initialize express before any potential errors
 const app = express();
+dotenv.config();
 
 // Basic middleware
 app.use(express.json());
@@ -94,38 +92,79 @@ app.use(
   })
 );
 
-// Test route to check if server is running
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Server is running" });
+// Test route that doesn't require DB connection
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ 
+    status: "healthy",
+    environment: process.env.NODE_ENV || "development",
+    timestamp: new Date().toISOString()
+  });
 });
 
-// API routes
-app.use("/admin", adminRoute);
-app.use("/user", userRoute);
-
-// Getting razorpay key for frontend
-app.get("/get-razorpay-key", (req, res) => {
-  res.json({ key: process.env.RAZORPAY_KEY_ID });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Internal Server Error' });
-});
-
-// Connect to MongoDB
-connectToMongoDB()
-  .then(() => console.log("Connected to MongoDB"))
-  .catch(error => console.error("Failed to connect to MongoDB:", error));
-
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+// Wrap routes in try/catch to prevent crashes
+try {
+  // Import routes after express is initialized
+  const connectToMongoDB = (await import("./db/connectToMongoDB.js")).default;
+  const adminRoute = (await import("./routers/admin.router.js")).default;
+  const userRoute = (await import("./routers/user.router.js")).default;
+  
+  // API routes
+  app.use("/admin", adminRoute);
+  app.use("/user", userRoute);
+  
+  // Getting razorpay key for frontend
+  app.get("/get-razorpay-key", (req, res) => {
+    try {
+      res.json({ key: process.env.RAZORPAY_KEY_ID || "RAZORPAY_KEY_NOT_SET" });
+    } catch (err) {
+      console.error("Error in razorpay route:", err);
+      res.status(500).json({ error: 'Error processing razorpay key request' });
+    }
+  });
+  
+  // Try to connect to MongoDB but don't crash if it fails
+  try {
+    await connectToMongoDB();
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("Failed to connect to MongoDB:", error);
+    // Add a route to check MongoDB status
+    app.get("/api/db-status", (req, res) => {
+      res.status(500).json({ 
+        error: 'MongoDB connection failed',
+        message: error.message
+      });
+    });
+  }
+} catch (err) {
+  console.error("Error during server initialization:", err);
+  // Add fallback route if imports fail
+  app.get("/", (req, res) => {
+    res.status(500).json({ 
+      error: 'Server initialization error',
+      message: err.message
+    });
   });
 }
 
+// Catch-all route for debugging
+app.get("*", (req, res) => {
+  res.status(404).json({ 
+    message: "Route not found", 
+    path: req.path,
+    method: req.method
+  });
+});
+
+// Error handling middleware - must be last
+app.use((err, req, res, next) => {
+  console.error("Express error handler caught:", err);
+  res.status(500).json({ 
+    error: 'Internal Server Error',
+    message: err.message,
+    path: req.path
+  });
+});
+
 // Export for Vercel
-module.exports = app;
+export default app;
