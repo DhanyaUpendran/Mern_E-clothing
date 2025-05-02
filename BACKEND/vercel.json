@@ -7,9 +7,9 @@
       }
     ],
     "routes": [
-      { "src": "/admin/(.*)", "dest": "/server.js" },
-      { "src": "/user/(.*)", "dest": "/server.js" },
-      { "src": "/get-razorpay-key", "dest": "/server.js" },
-      { "src": "/(.*)", "dest": "/server.js" }
+      {
+        "src": "/(.*)",
+        "dest": "server.js"
+      }
     ]
   }

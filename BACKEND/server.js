@@ -72,16 +72,16 @@ import dotenv from "dotenv";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import adminRoute from "./routers/admin.router.js";
 import userRoute from "./routers/user.router.js";
-import path from "path";
-import { fileURLToPath } from "url";
 import cors from "cors";
 
 dotenv.config();
 const app = express();
+
+// Basic middleware
 app.use(express.json());
 app.use(cookieParser());
 
-// Allow requests from frontend with proper CORS setup
+// CORS configuration
 app.use(
   cors({
     origin: [
@@ -94,6 +94,11 @@ app.use(
   })
 );
 
+// Test route to check if server is running
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Server is running" });
+});
+
 // API routes
 app.use("/admin", adminRoute);
 app.use("/user", userRoute);
@@ -103,39 +108,24 @@ app.get("/get-razorpay-key", (req, res) => {
   res.json({ key: process.env.RAZORPAY_KEY_ID });
 });
 
-// For Vercel serverless environment - no need to serve static files directly
-// Vercel will handle this through their infrastructure
-
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-// Connect to MongoDB and start server
-const port = process.env.PORT || 3000;
+// Connect to MongoDB
+connectToMongoDB()
+  .then(() => console.log("Connected to MongoDB"))
+  .catch(error => console.error("Failed to connect to MongoDB:", error));
 
-// In Vercel's serverless environment, we don't need to explicitly listen
-// on a port, but we still want to connect to MongoDB
-if (process.env.VERCEL) {
-  // Just connect to MongoDB
-  connectToMongoDB()
-    .then(() => console.log("Connected to MongoDB"))
-    .catch(error => console.error("Failed to connect to MongoDB:", error));
-} else {
-  // For local development
-  const startServer = async () => {
-    try {
-      await connectToMongoDB();
-      console.log("Connected to MongoDB");
-      app.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-      });
-    } catch (error) {
-      console.error("Failed to connect to MongoDB:", error);
-    }
-  };
-  startServer();
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
 }
 
-export default app;
+// Export for Vercel
+module.exports = app;
