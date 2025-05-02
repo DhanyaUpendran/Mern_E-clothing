@@ -11,5 +11,11 @@
         "src": "/(.*)",
         "dest": "/server.js"
       }
-    ]
+    ],
+    "env": {
+    "NODE_ENV": "production",
+    "MONGODB_URI": "mongodb+srv://dhanyaupendran:eclothing123@cluster0.69e4s.mongodb.net/",
+    
+    "FRONTEND_URL": "https://mern-e-clothing-sfhb.vercel.app"
+  }
   }
