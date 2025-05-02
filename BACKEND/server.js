@@ -17,8 +17,8 @@ app.use(cookieParser());
 // Allow requests from frontend
 app.use(
   cors({
-    origin: "http://localhost:5173", // 
-    "https://mern-e-clothing-sfhb.vercel.app",
+    origin: ["http://localhost:5173", // 
+    "https://mern-e-clothing-sfhb.vercel.app"],
 
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
