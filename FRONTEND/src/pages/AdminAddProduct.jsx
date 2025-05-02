@@ -21,7 +21,7 @@ const AdminAddProduct = () => {
         const token = localStorage.getItem("adminToken");
         console.log("Checking auth with token:", token);
 
-        const response = await axios.get("http://localhost:3000/admin/admindashboard", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/admindashboard`, {
           
           withCredentials: true,
         });
@@ -86,7 +86,7 @@ const AdminAddProduct = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await axios.post(
-        "http://localhost:3000/admin/addproduct",
+        `${import.meta.env.VITE_BACKEND_URL}/admin/addproduct`,
         formData,
         {
           

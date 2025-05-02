@@ -36,11 +36,11 @@ const CheckoutBilling = () => {
 
       setLoading(true);
        // Fetch Razorpay Key from Backend
-       const keyResponse = await axios.get('http://localhost:3000/get-razorpay-key',);
+       const keyResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-razorpay-key`,);
       const razorpayKey = keyResponse.data.key;
       // Call your backend to create Razorpay order
       const { data } = await axios.post(
-        "http://localhost:3000/user/checkout",
+        `${import.meta.env.VITE_BACKEND_URL}/user/checkout`,
         { billingDetails },
         { withCredentials: true }
       );
@@ -68,7 +68,7 @@ const CheckoutBilling = () => {
             try {
               // Verify Payment & Save Order
               const verifyRes = await axios.post(
-                "http://localhost:3000/user/checkout/verify-payment",
+                `${import.meta.env.VITE_BACKEND_URL}/user/checkout/verify-payment`,
                 {
                   razorpay_order_id: response.razorpay_order_id,
                   razorpay_payment_id: response.razorpay_payment_id,

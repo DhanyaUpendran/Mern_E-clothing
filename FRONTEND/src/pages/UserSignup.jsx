@@ -24,7 +24,7 @@ const UserSignup = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3000/user/usersignup", formData);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/usersignup`, formData);
 
       // Show success message
       Swal.fire({

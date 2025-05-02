@@ -16,7 +16,7 @@ const AdminOrderList = () => {
           return;
         }
 
-        const response = await axios.get("http://localhost:3000/admin/orderdetails-admin", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/orderdetails-admin`, {
           // headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
@@ -34,7 +34,7 @@ const AdminOrderList = () => {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/admin/update-status/${orderId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/admin/update-status/${orderId}`,
         { orderStatus: newStatus }, // Correct payload
         { withCredentials: true } // Correct option placement
       );

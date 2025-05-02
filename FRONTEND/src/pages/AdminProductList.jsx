@@ -12,7 +12,7 @@ const AdminProductList = () => {
         const token = localStorage.getItem("adminToken");
         console.log("Checking auth with token:", token);
 
-        const response = await axios.get("http://localhost:3000/admin/getproduct", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/getproduct`, {
           
           withCredentials: true,
           
@@ -26,7 +26,7 @@ const AdminProductList = () => {
     
 
         // Fetching products
-        const productResponse = await axios.get("http://localhost:3000/admin/getproduct", {
+        const productResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/getproduct`, {
           withCredentials: true,
         });
 
@@ -44,7 +44,7 @@ const AdminProductList = () => {
   // Delete Product Function
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/admin/getproducts/${id}`,{
+      const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/admin/getproducts/${id}`,{
       withCredentials: true,
       })
       if (response.data.success) {

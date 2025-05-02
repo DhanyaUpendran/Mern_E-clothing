@@ -17,7 +17,7 @@ const UserViewProduct = () => {
     const fetchProductDetails = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3000/user/${productId}`, {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${productId}`, {
           withCredentials: true,
         });
         setProduct(response.data.product);
@@ -50,7 +50,7 @@ const UserViewProduct = () => {
     
     try {
       await axios.post(
-        `http://localhost:3000/user/cart/add/${productId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/user/cart/add/${productId}`,
         {
           productId,
           size: selectedSize,

@@ -8,7 +8,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/admin/admindashboard", { withCredentials: true });
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/admindashboard`, { withCredentials: true });
 
         if (response.status !== 200) {
           navigate("/adminlogin");
@@ -24,7 +24,7 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/admin/logout", {}, { withCredentials: true });
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/admin/logout`, {}, { withCredentials: true });
 
       if (response.status === 200) {
         navigate("/adminlogin");

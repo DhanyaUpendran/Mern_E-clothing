@@ -15,7 +15,7 @@ const [totalPages, setTotalPages] = useState(1);
 useEffect(() => {
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/user/?page=${currentPage}&limit=4`);
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/?page=${currentPage}&limit=4`);
       setProducts(response.data.products);
       setTotalPages(response.data.totalPages); // Update total pages
     } catch (error) {
@@ -29,7 +29,7 @@ useEffect(() => {
 // Navigate to details page only if user is authenticated
 const handleViewDetails = async (productId) => {
   try {
-    const response = await axios.get(`http://localhost:3000/user/${productId}`, {
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${productId}`, {
       withCredentials: true,
     });
 

@@ -21,7 +21,7 @@ const AllProductsPage = () => {
       if (searchTerm) params.search = searchTerm;
       if (selectedCategory) params.category = selectedCategory;
       
-      const { data } = await axios.get('http://localhost:3000/user/products', { 
+      const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/products`, { 
         params,
         withCredentials: true,
       });
@@ -36,7 +36,7 @@ const AllProductsPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/user/products/categories', {
+      const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/products/categories`, {
         withCredentials: true,
       });
       setCategories(data.categories);
@@ -67,7 +67,7 @@ const AllProductsPage = () => {
   // Function to handle View Details button click
   const handleViewDetails = async (productId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/user/${productId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${productId}`, {
         withCredentials: true,
       });
 

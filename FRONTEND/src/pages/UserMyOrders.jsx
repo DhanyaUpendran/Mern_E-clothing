@@ -14,7 +14,7 @@ const MyOrders = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/user/orders', {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/orders`, {
         withCredentials: true,
       });
       setOrders(response.data.orders);
