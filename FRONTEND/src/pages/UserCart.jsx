@@ -13,9 +13,9 @@ const Cart = () => {
     const fetchCart = async () => {
       setIsLoading(true);
       try {
-        console.log("About to make API request with cookie authentication");
+       
         const response = await axios.get("http://localhost:3000/user/getcart", {
-          withCredentials: true, // This sends cookies with the request
+          withCredentials: true, 
         });
        
         console.log("API Response:", response);
@@ -140,8 +140,8 @@ const Cart = () => {
   return (
     <div>
       <Topbar />
-    <div className="max-w-3xl mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold mb-5">🛒 Your Cart</h2>
+    <div className="max-w-3xl mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg text-black">
+      <h2 className="text-2xl font-semibold mb-5 ">🛒 Your Cart</h2>
 
       {cartItems.length === 0 ? (
         <div className="text-center py-8">
@@ -165,7 +165,7 @@ const Cart = () => {
              
               <div
                 key={item._id}
-                className="flex items-center justify-between border-b pb-3 mb-3"
+                className="flex items-center justify-between border-b pb-3 mb-3  text-black"
               >
                 <div className="flex items-center gap-3">
                   <img 

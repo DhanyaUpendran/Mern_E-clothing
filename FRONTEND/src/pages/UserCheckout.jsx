@@ -130,10 +130,10 @@ const CheckoutBilling = () => {
   return (
     <div>
       
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg text-black">
       <h2 className="text-2xl font-semibold mb-5">📋 Billing Details</h2>
 
-      <form className="grid gap-4">
+      <form className="grid gap-4 text-black">
         <div className="grid grid-cols-2 gap-4">
           <input 
             type="text" 

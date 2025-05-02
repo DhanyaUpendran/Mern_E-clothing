@@ -24,7 +24,7 @@ const AdminOrderList = () => {
         setOrders(response.data.orders || []);
       } catch (error) {
         console.error("Error fetching orders:", error.response?.data || error.message);
-        navigate("/adminlogin");
+        // navigate("/adminlogin");
       }
     };
 

@@ -59,21 +59,7 @@ const startServer = async () => {
   }
 };
 startServer();
-// const cleanCartOnStart = async () => {
-//   try {
-//     const result = await Cart.updateMany(
-//       {},
-//       { $pull: { products: { productId: null } } }
-//     );
-//     console.log("Removed null products from carts:", result);
-//   } catch (error) {
-//     console.error("Error cleaning carts:", error);
-//   }
-// };
 
-// // Run cleanup when the server starts
-// cleanCartOnStart();
-// Add error handling middleware at the end
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error' });

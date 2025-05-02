@@ -25,4 +25,9 @@ router.put ("/cart/update",authMiddleware,updatequantity)
 
 router.post("/userlogout", authMiddleware, userlogout);
 
+router.get("/get-razorpay-key", (req, res) => {
+    res.status(200).json({ key: process.env.RAZORPAY_KEY_ID});
+  });
+  
+
 export default router;

@@ -65,7 +65,7 @@ const MyOrders = () => {
             <div className="border-t pt-4">
               {order.products.map(item => (
                 <div key={item._id} className="flex items-center py-2">
-                  {item.productId.images && item.productId.images.length > 0 ? (
+                 {item.productId?.images && item.productId.images.length > 0 ? (
   <img
     src={item.productId.images[0]} 
     alt={item.productId.name}
@@ -79,13 +79,13 @@ const MyOrders = () => {
   />
 )}
                   <div className="flex-1">
-                    <h3 className="font-medium">{item.productId.name}</h3>
+                    <h3 className="font-medium">{item.productId?.name || 'Unknown Product'}</h3>
                     <p className="text-gray-500">
-                      {item.quantity} × ${item.productId.price.toFixed(2)}
+                    {item.quantity} × ${item.productId?.price?.toFixed(2) || '0.00'}
                     </p>
                   </div>
                   <div className="font-medium">
-                    ${(item.quantity * item.productId.price).toFixed(2)}
+                  {item.quantity} × ${item.productId?.price?.toFixed(2) || '0.00'}
                   </div>
                 </div>
               ))}
@@ -96,9 +96,9 @@ const MyOrders = () => {
                 <div className="flex justify-between text-sm mb-1">
                   <span className="font-medium mr-8">Subtotal:</span>
                   <span>
-                    ${order.products.reduce((sum, item) => 
-                      sum + (item.productId.price * item.quantity), 0).toFixed(2)
-                    }
+                  ${order.products.reduce((sum, item) => 
+  sum + ((item.productId?.price || 0) * item.quantity), 0).toFixed(2)
+}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm mb-1">
@@ -108,10 +108,10 @@ const MyOrders = () => {
                 <div className="flex justify-between font-bold">
                   <span className="mr-8">Total:</span>
                   <span>
-                    ${(order.products.reduce((sum, item) => 
-                      sum + (item.productId.price * item.quantity), 0) + 
-                      (order.shippingFee || 0)).toFixed(2)
-                    }
+                  ${(order.products.reduce((sum, item) => 
+  sum + ((item.productId?.price || 0) * item.quantity), 0) + 
+  (order.shippingFee || 0)).toFixed(2)
+}
                   </span>
                 </div>
               </div>

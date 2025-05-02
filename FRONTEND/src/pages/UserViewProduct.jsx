@@ -183,11 +183,11 @@ const UserViewProduct = () => {
           </div>
 
           {/* Quantity Selector */}
-          <div>
+          <div >
             <h3 className="text-lg font-medium text-gray-800 mb-2">Quantity</h3>
-            <div className="flex items-center">
+            <div className="flex items-center text-black">
               <button
-                className="w-10 h-10 rounded-l border border-gray-300 flex items-center justify-center text-xl font-medium"
+                className="w-10 h-10 rounded-l border border-gray-300 flex items-center justify-center text-xl  font-medium"
                 onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
               >
                 -
