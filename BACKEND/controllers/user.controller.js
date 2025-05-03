@@ -43,7 +43,7 @@ export const userSignup = async (req,res)=>{
         res.status(500).json({ 
           error: "Failed to create admin",
           details: error.message,
-           stack: process.env.NODE_ENV === "development" ? error.stack : undefined
+           stack: process.env.NODE_ENV === "production" ? error.stack : undefined
         });}}
 
     
@@ -81,14 +81,16 @@ export const userSignup = async (req,res)=>{
               res.cookie('token', token, {
                 httpOnly: true,
                 
-                   sameSite: "Lax",
-                secure: process.env.NODE_ENV === 'production',
+                   sameSite: 'None',
+                // secure: process.env.NODE_ENV === 'production',
+                secure: true,
                 maxAge: 3600000 // 1 hour
               });
           
               // Return response without sensitive data
               res.status(200).json({
                 success: true,
+                token, // Send token in response body as well
                 user: {
                   id: user._id,
                   username: user.username,
