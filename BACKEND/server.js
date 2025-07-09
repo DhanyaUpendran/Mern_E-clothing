@@ -86,7 +86,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://mern-e-clothing-sfhb.vercel.app"
+      "https://mern-e-clothing-sfhb.vercel.app",
+      "https://mern-e-clothing-sfhb-rimefua3a-dhanyas-projects-bbe37b38.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
